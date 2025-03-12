@@ -1,6 +1,7 @@
 {
   "name": "my-chatbot-project",
   "version": "1.0.0",
+  "type": "module",  // ✅ Add this to support node-fetch v3
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
