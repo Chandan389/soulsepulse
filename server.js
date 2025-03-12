@@ -62,18 +62,13 @@ app.get("/", (req, res) => {
  
 // ✅ Chatbot Query Handling
 
-app.post("/query", async (req, res) => {
-
+app.post('/query', async (req, res) => {
     try {
-
         const { message } = req.body;
-
         console.log("🔹 Received message:", message);
- 
-        if (!message) {
 
-            return res.status(400).json({ error: "Message is required" });
-
+        if (!message || message.trim().length === 0) {
+            return res.status(400).json({ error: "Message cannot be empty" });
         }
  
         // ✅ Common Responses
@@ -146,11 +141,17 @@ app.post("/query", async (req, res) => {
 
 async function getCohereResponse(userMessage) {
 
+    if (!userMessage || userMessage.trim().length === 0) {
+
+        return "Sorry, I need a valid question to answer!";
+
+    }
+ 
     const payload = {
 
         model: "command-r",
 
-        messages: [{ role: "user", content: userMessage }],
+        messages: [{ role: "user", content: userMessage }], // ✅ Correct format
 
         temperature: 0.7,
 
@@ -170,7 +171,7 @@ async function getCohereResponse(userMessage) {
 
             headers: {
 
-                Authorization: `Bearer ${COHERE_API_KEY}`,
+                Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
 
                 "Content-Type": "application/json"
 
@@ -181,7 +182,7 @@ async function getCohereResponse(userMessage) {
         });
  
         console.log("✅ Response Status:", response.status);
- 
+
         if (!response.ok) {
 
             const errorText = await response.text();
@@ -193,14 +194,8 @@ async function getCohereResponse(userMessage) {
         }
  
         const data = await response.json();
-
-        console.log("📥 Cohere API Response:", JSON.stringify(data, null, 2));
  
-        return data.generations && data.generations[0] && data.generations[0].text
-
-            ? data.generations[0].text
-
-            : "Sorry, I couldn't process your request.";
+        return data.text || "Sorry, I couldn't process your request.";
 
     } catch (error) {
 
@@ -211,6 +206,8 @@ async function getCohereResponse(userMessage) {
     }
 
 }
+
+ 
  
 // ✅ Start Server
 
