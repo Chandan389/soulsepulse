@@ -4,8 +4,6 @@ const cors = require("cors");
 
 const fs = require("fs");
 
-import fetch from "node-fetch";
-
 const dotenv = require("dotenv");
  
 dotenv.config();
