@@ -1,45 +1,43 @@
-// chatbot.js
-// Function to append messages to the chat window
+const BACKEND_URL = "https://soulsepulse.onrender.com";
+ 
 function appendMessage(message, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
-    messageDiv.innerText = message;
-    document.getElementById('messages').appendChild(messageDiv);
-    document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    const div = document.createElement("div");
+    div.classList.add("message", sender === "bot" ? "bot-message" : "user-message");
+    div.textContent = message;
+    document.getElementById("messages").appendChild(div);
+    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
 }
-
-// Function to handle user input and interact with the backend API
-function handleUserInput() {
-    const userInput = document.getElementById('user-input').value;
-    if (!userInput.trim()) return;
-
-    appendMessage(userInput, 'user'); // Show user's message
-    document.getElementById('user-input').value = ''; // Clear input field
-
-    // Call the backend API with the user input
-    fetchData(userInput);
-}
-
-// Function to interact with the backend API
-function fetchData(userInput) {
-    console.log("🔹 Sending message to server:", userInput);
-
-    fetch('http://localhost:5001/query', {
+ 
+function askQuestion() {
+    const userInput = document.getElementById("user-input").value.trim();
+    if (!userInput) return;
+    appendMessage(userInput, "user");
+    document.getElementById("user-input").value = "";
+ 
+    appendMessage("SoulPulse is thinking...", "bot");
+ 
+    fetch(`${BACKEND_URL}/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userInput })  // 🔥 Ensure correct field name
+        body: JSON.stringify({ message: userInput })
     })
     .then(response => response.json())
     .then(data => {
-        console.log("✅ Received response from server:", data);
-        appendMessage(data.response || "I didn't understand that.", 'bot');
+        document.getElementById("messages").lastChild.remove();
+        appendMessage(data.response || "I didn't understand that.", "bot");
     })
     .catch(error => {
-        console.error('❌ Fetch error:', error);
-        appendMessage('Error processing request.', 'bot');
+        document.getElementById("messages").lastChild.remove();
+        appendMessage("❌ Error processing request. Try again.", "bot");
     });
 }
-
+ 
+document.getElementById("send-button").addEventListener("click", askQuestion);
+document.getElementById("user-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        askQuestion();
+    }
+});
 
 // Event listener for send button
 document.getElementById('send-button').addEventListener('click', handleUserInput);
