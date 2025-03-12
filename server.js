@@ -1,14 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const fetch = require('node-fetch');  // Ensure fetch is available for API calls
+require('dotenv').config();  // Load environment variables
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = 5001;
-const OLLAMA_URL = 'http://localhost:11434/api/generate';
+const PORT = process.env.PORT || 5001;
 const GITA_DATA_FILE = './gita_data.json';
+const COHERE_API_KEY = process.env.COHERE_API_KEY;  // Read API Key from .env
 
 // ✅ Add RapidAPI Key
 const RAPIDAPI_KEY = '67b70e461fmsh23a94aeabf1cfd7p132243jsn8f86660e3fdc';  // 🔴 Replace this with your actual RapidAPI key
@@ -73,8 +75,7 @@ app.post('/query', async (req, res) => {
             console.log("✅ Responding with greeting");
             return res.json({ response: "Hello! How can I assist you today?" });
         }
-
-        // ✅ Check for Chapter Queries (e.g., "chapter 2")
+// ✅ Check for Chapter Queries (e.g., "chapter 2")
         const chapterMatch = message.match(/chapter (\d+)/i);
         if (chapterMatch) {
             const chapterNumber = `chapter_${chapterMatch[1]}`;
@@ -87,17 +88,17 @@ app.post('/query', async (req, res) => {
                 return res.json({ response: "I couldn't find that chapter. Please try another one." });
             }
         }
-
+ 
         // ✅ Check for Verse Queries (e.g., "verse 2.47")
         const verseMatch = message.match(/verse (\d+)\.(\d+)/i);
         if (verseMatch) {
             const chapterNumber = `chapter_${verseMatch[1]}`;
             const verseNumber = verseMatch[2];
-
+ 
             if (gitaData[chapterNumber]) {
                 const keyVerses = gitaData[chapterNumber].key_verses;
                 const verse = keyVerses.find(v => v.verse === `${verseMatch[1]}.${verseNumber}`);
-
+ 
                 if (verse) {
                     const responseText = `📖 *Verse ${verse.verse}*\n\n📜 Sanskrit: ${verse.sanskrit}\n\n📝 Translation: ${verse.translation}`;
                     console.log("✅ Responding with Verse Info");
@@ -106,43 +107,41 @@ app.post('/query', async (req, res) => {
             }
             return res.json({ response: "Sorry, I couldn't find that verse." });
         }
-
-        // ✅ If no match, send query to AI
-        const aiResponse = await getOllamaResponse(message);
+        
+        // ✅ Call Cohere AI API
+        const aiResponse = await getCohereResponse(message);
         console.log("✅ AI Response:", aiResponse);
         return res.json({ response: aiResponse });
-
     } catch (error) {
         console.error("❌ Error in /query endpoint:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-
-/**
- * Generates an AI response using Ollama.
- * @param {string} userMessage - The user query.
- * @returns {Promise<string>} The AI-generated response.
- */
-async function getOllamaResponse(userMessage) {
+// ✅ Function to Call Cohere API
+async function getCohereResponse(userMessage) {
     const payload = {
-        model: 'mistral',
-        prompt: `Answer this question based on the Bhagavad Gita:\n"${userMessage}"`,
-        stream: false
+        model: "command-r",  // Cohere's latest chatbot model
+        message: userMessage,
+        temperature: 0.7,  // Adjust creativity level
+        max_tokens: 300
     };
 
     try {
-        const response = await fetch('http://localhost:11434/api/generate', {  // ✅ Uses built-in fetch
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("https://api.cohere.com/v1/chat", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${COHERE_API_KEY}`,
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(payload)
         });
 
         const data = await response.json();
-        return data.response || 'I am not sure about that.';
+        return data.text || "Sorry, I couldn't process your request.";
     } catch (error) {
-        console.error('❌ Error generating AI response:', error);
-        return 'Sorry, I could not process your request.';
+        console.error("❌ Error fetching response from Cohere:", error);
+        return "Error connecting to the AI service.";
     }
 }
 
