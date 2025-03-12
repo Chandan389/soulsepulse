@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const fetch = require('node-fetch');  // Ensure fetch is available for API calls
 require('dotenv').config();  // Load environment variables
 
 const app = express();
