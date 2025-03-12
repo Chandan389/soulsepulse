@@ -105,5 +105,5 @@ async function getCohereResponse(userMessage) {
  
 // ✅ Start Server
 app.listen(PORT, () => {
-    console.log(`✅ Server running on ${process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`}`);
+    console.log(`✅ Server running on ${process.env.RENDER_EXTERNAL_URL || `https://soulsepulse.onrender.com`}`);
 });
