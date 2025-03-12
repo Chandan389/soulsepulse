@@ -1,0 +1,144 @@
+{
+  "chapter_1": {
+    "title": "Arjun Vishad Yog",
+    "summary": "Arjuna, overwhelmed with sorrow and doubt, refuses to fight in the Kurukshetra war. He fears the consequences of killing his own relatives and teachers.",
+    "context": "The great battle of Kurukshetra is about to begin. Arjuna, the mighty warrior, sees his own family members on both sides and becomes confused and emotionally weak.",
+    "key_verses": [
+      {
+        "verse": "1.1",
+        "sanskrit": "धृतराष्ट्र उवाच...",
+        "translation": "Dhritarashtra said: O Sanjay, what happened on the battlefield of Kurukshetra?"
+      },
+      {
+        "verse": "1.28", 
+        "sanskrit": "अर्जुन उवाच...",
+        "translation": "Arjuna said: My whole body trembles, my bow slips from my hand, and my skin burns as I see my relatives on this battlefield."
+      },
+      {
+        "verse": "1.47",
+        "sanskrit": "एवमुक्त्वा अर्जुनः...",
+        "translation": "Having spoken thus, Arjuna, overwhelmed with sorrow, set aside his bow and sat down in the chariot."
+      }
+    ],
+    "teachings": [
+      "Arjuna's dilemma represents the moral struggles we all face in life.",
+      "Fear and confusion arise when we let emotions cloud our duty.",
+      "It is important to seek guidance when we are uncertain."
+    ]
+  },
+  "chapter_2": {
+    "title": "Sankhya Yog",
+    "summary": "Krishna introduces the concept of the eternal soul and explains why Arjuna must rise above his doubts and fight.",
+    "context": "Krishna sees Arjuna’s sorrow and begins to impart spiritual wisdom, explaining the difference between the physical body and the eternal soul.",
+    "key_verses": [
+      {
+        "verse": "2.13",
+        "sanskrit": "देहिनोऽस्मिन यथा...",
+        "translation": "Just as the soul passes through childhood, youth, and old age in this body, so also it passes into another body after death."
+      },
+      {
+        "verse": "2.47",
+        "sanskrit": "कर्मण्येवाधिकारस्ते...",
+        "translation": "You have the right to perform your prescribed duties, but you are not entitled to the fruits of your actions."
+      },
+      {
+        "verse": "2.50",
+        "sanskrit": "योगः कर्मसु कौशलम्...",
+        "translation": "Performing work skillfully and with detachment is the essence of yoga."
+      }
+    ],
+    "teachings": [
+      "The soul is eternal and beyond physical death.",
+      "One must focus on performing duty, not on rewards.",
+      "Detachment from results leads to peace and self-realization."
+    ]
+  },
+  "chapter_3": {
+    "title": "Karma Yog",
+    "summary": "Krishna explains the importance of selfless action and fulfilling one's duty without attachment.",
+    "context": "Arjuna still hesitates. Krishna explains that action (karma) is necessary, and inaction is not an option for a warrior.",
+    "key_verses": [
+      {
+        "verse": "3.9",
+        "sanskrit": "यज्ञार्थात्कर्मणोऽन्यत्र...",
+        "translation": "Work done as a sacrifice for the Supreme must be performed; otherwise, work causes bondage in this world."
+      },
+      {
+        "verse": "3.21",
+        "sanskrit": "यद्यदाचरति श्रेष्ठः...",
+        "translation": "Whatever great people do, others follow their example."
+      }
+    ],
+    "teachings": [
+      "Selfless action (karma yoga) is the path to liberation.",
+      "Perform duties without selfish motives.",
+      "Great leaders influence society through their actions."
+    ]
+  },
+  "chapter_4": {
+    "title": "Gyaan Karma Sanyas Yog",
+    "summary": "Krishna reveals that he incarnates whenever righteousness declines and imparts divine knowledge.",
+    "context": "Krishna explains the eternal cycle of righteousness and how selfless action leads to enlightenment.",
+    "key_verses": [
+      {
+        "verse": "4.7",
+        "sanskrit": "यदा यदा हि धर्मस्य...",
+        "translation": "Whenever righteousness declines and unrighteousness rises, I manifest myself to protect the good and destroy the evil."
+      },
+      {
+        "verse": "4.34",
+        "sanskrit": "तद्विद्धि प्रणिपातेन...",
+        "translation": "To learn the truth, approach a spiritual teacher with humility and seek knowledge through service."
+      }
+    ],
+    "teachings": [
+      "God takes form when righteousness declines.",
+      "True knowledge is attained by seeking wisdom from a guru.",
+      "Selfless action leads to liberation."
+    ]
+  },
+  "chapter_5": {
+    "title": "Karma Sanyas Yog",
+    "summary": "Krishna explains the difference between renunciation (sanyas) and selfless action (karma yoga).",
+    "context": "Arjuna wonders if renunciation is superior to action. Krishna clarifies that action with detachment is the best path.",
+    "key_verses": [
+      {
+        "verse": "5.18",
+        "sanskrit": "विद्या विनय सम्पन्ने...",
+        "translation": "The wise see a learned Brahmin, a cow, an elephant, and even a dog equally."
+      },
+      {
+        "verse": "5.22",
+        "sanskrit": "ये हि संस्पर्शजा भोगा...",
+        "translation": "Pleasures born of contact with the senses are temporary and lead to suffering."
+      }
+    ],
+    "teachings": [
+      "Renunciation is not about avoiding duty but detaching from its fruits.",
+      "A wise person sees all beings as equal.",
+      "True happiness is beyond temporary pleasures."
+    ]
+  },
+  "chapter_6": {
+    "title": "Dhyana Yog",
+    "summary": "Krishna explains meditation (dhyana) and the qualities of a true yogi.",
+    "context": "Krishna now introduces the practice of meditation as a means to self-realization.",
+    "key_verses": [
+      {
+        "verse": "6.6",
+        "sanskrit": "उद्धरेदात्मनात्मानं...",
+        "translation": "One must elevate oneself by one's own mind, not degrade oneself. The mind is a friend of the self, and also its enemy."
+      },
+      {
+        "verse": "6.15",
+        "sanskrit": "युञ्जन्नेवं सदात्मानं...",
+        "translation": "A yogi, meditating with a focused mind, attains peace and liberation."
+      }
+    ],
+    "teachings": [
+      "Meditation leads to self-control and inner peace.",
+      "The mind can be our greatest friend or worst enemy.",
+      "A true yogi is disciplined, detached, and devoted."
+    ]
+  }
+}
