@@ -66,42 +66,76 @@ app.post('/query', async (req, res) => {
             return res.json({ response: "I couldn't find that chapter. Please try another one." });
         }
  
-        // ✅ Fetch AI Response from Cohere
-        const aiResponse = await getCohereResponse(message);
-        return res.json({ response: aiResponse });
- 
-    } catch (error) {
-        console.error("❌ Error in /query endpoint:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
-});
- 
-// ✅ Cohere AI API Call
+       // ✅ Fetch AI Response from Cohere API
+
 async function getCohereResponse(userMessage) {
+
     const payload = {
+
         model: "command-r",
+
         messages: [{ role: "user", content: userMessage }],
+
         temperature: 0.7,
-        max_tokens: 300
+
+        max_tokens: 300,
+
     };
  
     try {
+
+        console.log("🔹 Sending request to Cohere API...");
+
+        console.log("📤 Request Payload:", JSON.stringify(payload, null, 2));
+ 
         const response = await fetch("https://api.cohere.com/v1/chat", {
+
             method: "POST",
+
             headers: {
-                "Authorization": `Bearer ${COHERE_API_KEY}`,
-                "Content-Type": "application/json"
+
+                Authorization: `Bearer ${COHERE_API_KEY}`,
+
+                "Content-Type": "application/json",
+
             },
-            body: JSON.stringify(payload)
+
+            body: JSON.stringify(payload),
+
         });
  
+        console.log("✅ Response Status:", response.status);
+ 
+        if (!response.ok) {
+
+            const errorText = await response.text();
+
+            console.error("❌ Cohere API Error:", errorText);
+
+            return `Cohere API Error: ${errorText}`;
+
+        }
+ 
         const data = await response.json();
-        return data.generations ? data.generations[0].text : "Sorry, I couldn't process your request.";
+
+        console.log("📥 Cohere API Response:", JSON.stringify(data, null, 2));
+ 
+        return data.generations && data.generations[0] && data.generations[0].text
+
+            ? data.generations[0].text
+
+            : "Sorry, I couldn't process your request.";
+
     } catch (error) {
+
         console.error("❌ Error fetching response from Cohere:", error);
+
         return "Error connecting to the AI service.";
+
     }
+
 }
+
  
 // ✅ Start Server
 app.listen(PORT, () => {
