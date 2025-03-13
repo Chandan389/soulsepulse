@@ -113,7 +113,7 @@ async function getCohereResponse(userMessage) {
     };
 
     try {
-        const response = await fetch("https://api.cohere.com/v1/generate", {
+        const response = await fetch("https://api.cohere.com/v1/chat", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${COHERE_API_KEY}`,
