@@ -65,12 +65,25 @@ app.get("/", (req, res) => {
 app.post('/query', async (req, res) => {
     try {
         const { message } = req.body;
+
         console.log("🔹 Received message:", message);
 
+        // ✅ Check if the message is empty
         if (!message || message.trim().length === 0) {
-            return res.status(400).json({ error: "Message cannot be empty" });
+            return res.status(400).json({ error: "Message cannot be empty." });
         }
- 
+
+        // ✅ Call Cohere API
+        const aiResponse = await getCohereResponse(message);
+        console.log("✅ AI Response:", aiResponse);
+        return res.json({ response: aiResponse });
+
+    } catch (error) {
+        console.error("❌ Error in /query endpoint:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
         // ✅ Common Responses
 
         const responses = {
@@ -140,72 +153,41 @@ app.post('/query', async (req, res) => {
 // ✅ Function to Fetch AI Response from Cohere API
 
 async function getCohereResponse(userMessage) {
-
     if (!userMessage || userMessage.trim().length === 0) {
-
-        return "Sorry, I need a valid question to answer!";
-
+        return "Invalid input: Message cannot be empty.";
     }
- 
+
     const payload = {
-
         model: "command-r",
-
-        messages: [{ role: "user", content: userMessage }], // ✅ Correct format
-
+        chat_history: [],  // Required by Cohere API
+        message: [{ role: "USER", content: userMessage }],  // Ensure correct format
         temperature: 0.7,
-
         max_tokens: 300
-
     };
- 
+
     try {
-
-        console.log("🔹 Sending request to Cohere API...");
-
-        console.log("📤 Request Payload:", JSON.stringify(payload, null, 2));
- 
         const response = await fetch("https://api.cohere.com/v1/chat", {
-
             method: "POST",
-
             headers: {
-
-                Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
-
+                "Authorization": `Bearer ${COHERE_API_KEY}`,
                 "Content-Type": "application/json"
-
             },
-
             body: JSON.stringify(payload)
-
         });
- 
-        console.log("✅ Response Status:", response.status);
 
-        if (!response.ok) {
-
-            const errorText = await response.text();
-
-            console.error("❌ Cohere API Error:", errorText);
-
-            return `Cohere API Error: ${errorText}`;
-
-        }
- 
         const data = await response.json();
- 
-        return data.text || "Sorry, I couldn't process your request.";
 
+        if (!data.text || data.text.trim().length === 0) {
+            return "Sorry, I couldn't generate a response.";
+        }
+
+        return data.text;
     } catch (error) {
-
-        console.error("❌ Error fetching response from Cohere:", error);
-
-        return "Error connecting to the AI service.";
-
+        console.error("❌ Cohere API Error:", error);
+        return "Error connecting to AI service.";
     }
-
 }
+
 
  
  
