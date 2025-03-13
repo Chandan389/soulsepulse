@@ -108,7 +108,8 @@ async function getCohereResponse(userMessage) {
         model: "command-r",
         prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
         max_tokens: 300,
-        temperature: 0.5
+        temperature: 0.7,
+        stop_sequences: ["\n"]
     };
 
     try {
