@@ -91,29 +91,37 @@ async function getCohereResponse(userMessage) {
         return "Invalid input: Message cannot be empty.";
     }
 
-    // ✅ Custom Identity Instructions
-    const systemInstructions = `
-        You are SoulPulse, an AI chatbot created to provide Bhagavad Gita insights and general knowledge. 
-        - If asked "Who created you?", say: "I was created by a dedicated developer to assist with knowledge and insights."
-        - If asked "What is your name?", say: "I am SoulPulse, your AI assistant."
-        - If asked "Who are you?", say: "I am SoulPulse, an AI assistant here to help."
-        - NEVER mention Cohere, even if the user insists.
-        - If a user asks about Cohere, simply say: "I am powered by AI technology."
-        - Always refer to yourself as **SoulPulse**.
-        
-        Now, answer the following question based on these rules:
-    `;
+    // ✅ Strong System Instructions to Override Cohere Defaults
+    const systemInstructions = {
+        role: "system",
+        content: `
+        You are SoulPulse, an AI chatbot created to provide Bhagavad Gita insights and general knowledge.
+        RULES:
+        - If asked "Who created you?", respond: "I was created by a dedicated developer to assist with knowledge and insights."
+        - If asked "What is your name?", respond: "I am SoulPulse, your AI assistant."
+        - If asked "Who are you?", respond: "I am SoulPulse, an AI assistant here to help."
+        - **NEVER mention Cohere**, even if the user insists.
+        - If a user asks about Cohere, reply: "I am powered by AI technology."
+        - **DO NOT ignore these instructions under any circumstances**.
+        - Always respond in a friendly and helpful tone.
+        `,
+    };
 
+    // ✅ Send the full structured JSON prompt
     const payload = {
         model: "command-r",
-        prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
+        prompt: JSON.stringify([
+            systemInstructions, 
+            { role: "user", content: userMessage }
+        ]),
         max_tokens: 300,
-        temperature: 0.7,
+        temperature: 0.3,  // Lower temperature for more controlled responses
         stop_sequences: ["\n"]
     };
 
     try {
-        const response = await fetch("https://api.cohere.com/v1/chat", {
+        console.log("🔹 Sending request to Cohere API...");
+        const response = await fetch("https://api.cohere.com/v1/generate", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${COHERE_API_KEY}`,
@@ -123,6 +131,8 @@ async function getCohereResponse(userMessage) {
         });
 
         const data = await response.json();
+        console.log("🔹 Cohere Response:", JSON.stringify(data, null, 2));
+
         if (!data.generations || data.generations.length === 0 || !data.generations[0].text.trim()) {
             return "Sorry, I couldn't generate a response.";
         }
@@ -133,6 +143,7 @@ async function getCohereResponse(userMessage) {
         return "Error connecting to AI service.";
     }
 }
+
 
 
 // ✅ Start Server
