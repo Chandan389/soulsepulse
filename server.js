@@ -62,7 +62,7 @@ app.get("/", (req, res) => {
  
 // ✅ Chatbot Query Handling
 
-app.post('/query', async (req, res) => {
+app.post('/query', async (req, res) => {  // ✅ Ensure the function is async
     try {
         const { message } = req.body;
 
@@ -74,7 +74,7 @@ app.post('/query', async (req, res) => {
         }
 
         // ✅ Call Cohere API
-        const aiResponse = await getCohereResponse(message);
+        const aiResponse = await getCohereResponse(message);  // ✅ Ensure async call
         console.log("✅ AI Response:", aiResponse);
         return res.json({ response: aiResponse });
 
@@ -83,6 +83,7 @@ app.post('/query', async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
 
         // ✅ Common Responses
 
@@ -176,7 +177,6 @@ async function getCohereResponse(userMessage) {
         });
 
         const data = await response.json();
-
         if (!data.text || data.text.trim().length === 0) {
             return "Sorry, I couldn't generate a response.";
         }
