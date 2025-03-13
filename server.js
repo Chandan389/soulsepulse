@@ -118,7 +118,7 @@ async function getCohereResponse(userMessage) {
         prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
         max_tokens: 400,
         temperature: 0.6,
-        stop_sequences: ["\n\nUser:"],
+        stop_sequences: [],
     };
 
     try {
