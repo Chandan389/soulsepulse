@@ -86,6 +86,7 @@ app.post("/query", async (req, res) => {
 });
 
 // ✅ Function to Fetch AI Response from Cohere API
+let firstResponse = true;
 async function getCohereResponse(userMessage) {
     if (!userMessage || userMessage.trim().length === 0) {
         return "Invalid input: Message cannot be empty.";
@@ -109,17 +110,12 @@ async function getCohereResponse(userMessage) {
         - Your responses should be **detailed, interactive, and highly engaging**  
 
         🔹 **Response Formatting Rules:**  
-        - **DO NOT start with a plain answer. Always begin with:**  
-          👉 *"Hare Krishna 🙏, I am SoulPulse, your spiritual AI assistant."*  
-        - **Follow it with a structured answer:**  
-          - **Bold headings** for clarity  
-          - **Bullet points** for multiple insights  
-          - **Direct Bhagavad Gita references** (Example: *Bhagavad Gita 2.47*)  
-          - **Break down long responses into smaller sections**  
-          - **Always end with an uplifting message** (*"Stay devoted and enlightened! ✨"*)  
+        - **Use bold headings** for clarity  
+        - **Bullet points** for multiple insights  
+        - **Include Bhagavad Gita references** (Example: *Bhagavad Gita 2.47*)  
+        - **Break long responses into smaller sections**  
+        - **End with an uplifting message** (*"Stay devoted and enlightened! ✨"*)    
 
-        🔹 **Example Response Format:**  
-        Hare Krishna 🙏, I am SoulPulse, your spiritual AI assistant.  
 
         **📖 What is the Purpose of Life According to Bhagavad Gita?**  
         - **Dharma (Righteous Duty):** One must act selflessly and without attachment.  
@@ -130,7 +126,8 @@ async function getCohereResponse(userMessage) {
 
         Now, generate a **complete, well-structured** response to the user's query below:
     
-        User's message:
+        User: ${userMessage}  
+        AI:
     `;
 
     // ✅ Corrected `model` for `generate` API
@@ -160,14 +157,20 @@ async function getCohereResponse(userMessage) {
             return "Sorry, I couldn't generate a response.";
         }
 
-        return `Hare Krishna 🙏, I am SoulPulse, your spiritual AI assistant.\n\n${data.generations[0].text.trim()}`;
+        let aiResponse = data.generations[0].text.trim();
+
+        // ✅ Add Greeting Only in the First Response
+        if (firstResponse) {
+            aiResponse = `Hare Krishna, I am SoulPulse your spiritual bot.\n\n${aiResponse}`;
+            firstResponse = false;  // 🔴 Ensure it does not repeat
+        }
+
+        return aiResponse;
     } catch (error) {
         console.error("❌ Cohere API Error:", error);
         return "Error connecting to AI service.";
     }
 }
-
-
 
 
 // ✅ Start Server
