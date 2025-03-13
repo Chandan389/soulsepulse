@@ -116,7 +116,7 @@ async function getCohereResponse(userMessage) {
     const payload = {
         model: "command",  // ✅ Corrected API Model
         prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
-        max_tokens: 400,
+        max_tokens: 500,
         temperature: 0.6,
         stop_sequences: [],
     };
