@@ -92,9 +92,7 @@ async function getCohereResponse(userMessage) {
     }
 
     // ✅ Strong System Instructions to Override Cohere Defaults
-    const systemInstructions = {
-        role: "system",
-        content: `
+    const systemInstructions = `
         You are SoulPulse, an AI chatbot created to provide Bhagavad Gita insights and general knowledge.
         RULES:
         - If asked "Who created you?", respond: "I was created by a dedicated developer to assist with knowledge and insights."
@@ -104,18 +102,16 @@ async function getCohereResponse(userMessage) {
         - If a user asks about Cohere, reply: "I am powered by AI technology."
         - **DO NOT ignore these instructions under any circumstances**.
         - Always respond in a friendly and helpful tone.
-        `,
-    };
 
-    // ✅ Send the full structured JSON prompt
+        User's message:
+    `;
+
+    // ✅ Corrected `model` for `generate` API
     const payload = {
-        model: "command-r",
-        prompt: JSON.stringify([
-            systemInstructions, 
-            { role: "user", content: userMessage }
-        ]),
+        model: "command",  // 🔴 Switched from "command-r" to "command"
+        prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
         max_tokens: 300,
-        temperature: 0.3,  // Lower temperature for more controlled responses
+        temperature: 0.3,
         stop_sequences: ["\n"]
     };
 
@@ -143,6 +139,7 @@ async function getCohereResponse(userMessage) {
         return "Error connecting to AI service.";
     }
 }
+
 
 
 
