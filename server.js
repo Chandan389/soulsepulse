@@ -110,8 +110,8 @@ async function getCohereResponse(userMessage) {
     const payload = {
         model: "command",  // 🔴 Switched from "command-r" to "command"
         prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
-        max_tokens: 300,
-        temperature: 0.3,
+        max_tokens: 150,
+        temperature: 0.2,
         stop_sequences: ["\n"]
     };
 
