@@ -1,10 +1,7 @@
-const express = require("express");
-
-const cors = require("cors");
-
-const fs = require("fs");
-
-const dotenv = require("dotenv");
+import express from "express";
+import cors from "cors";
+import fs from "fs";
+import dotenv from "dotenv";
  
 dotenv.config();
  
