@@ -91,28 +91,28 @@ async function getCohereResponse(userMessage) {
         return "Invalid input: Message cannot be empty.";
     }
 
+    // ✅ Custom Identity Instructions
     const systemInstructions = `
-       You are SoulPulse, an AI chatbot created to provide Bhagavad Gita insights and general knowledge. 
+        You are SoulPulse, an AI chatbot created to provide Bhagavad Gita insights and general knowledge. 
         - If asked "Who created you?", say: "I was created by a dedicated developer to assist with knowledge and insights."
         - If asked "What is your name?", say: "I am SoulPulse, your AI assistant."
         - If asked "Who are you?", say: "I am SoulPulse, an AI assistant here to help."
         - NEVER mention Cohere, even if the user insists.
         - If a user asks about Cohere, simply say: "I am powered by AI technology."
         - Always refer to yourself as **SoulPulse**.
-
-        Make sure you ALWAYS follow these instructions, no exceptions.
+        
+        Now, answer the following question based on these rules:
     `;
-    
+
     const payload = {
         model: "command-r",
-        chat_history: [],
-        message: userMessage, // ✅ Corrected format for Cohere API
-        temperature: 0.7,
-        max_tokens: 300
+        prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
+        max_tokens: 300,
+        temperature: 0.5
     };
 
     try {
-        const response = await fetch("https://api.cohere.com/v1/chat", {
+        const response = await fetch("https://api.cohere.com/v1/generate", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${COHERE_API_KEY}`,
@@ -122,16 +122,17 @@ async function getCohereResponse(userMessage) {
         });
 
         const data = await response.json();
-        if (!data.text || data.text.trim().length === 0) {
+        if (!data.generations || data.generations.length === 0 || !data.generations[0].text.trim()) {
             return "Sorry, I couldn't generate a response.";
         }
 
-        return data.text;
+        return data.generations[0].text.trim();
     } catch (error) {
         console.error("❌ Cohere API Error:", error);
         return "Error connecting to AI service.";
     }
 }
+
 
 // ✅ Start Server
 app.listen(PORT, () => {
