@@ -47,19 +47,10 @@ app.post("/query", async (req, res) => {
             return res.status(400).json({ error: "Message cannot be empty." });
         }
 
-        // ✅ Predefined Responses
-        const responses = {
-            "hi": "Hello! How can I assist you today? 😊",
-            "hello": "Hey there! How can I help?",
-            "hey": "Hey! What do you want to ask?",
-            "how are you": "I'm just a chatbot, but I'm here to assist you! 😃",
-            "what can you do": "I can answer questions about the Bhagavad Gita and general knowledge.",
-            "who made you": "I was created by a developer to answer Bhagavad Gita and general queries!",
-            "tell me a joke": "Why don't programmers like nature? Because it has too many bugs! 😆"
-        };
-
-        if (responses[message.toLowerCase()]) {
-            return res.json({ response: responses[message.toLowerCase()] });
+        // ✅ Predefined Greetings (Fixed to match user request)
+        const greetings = ["hi", "hello", "hey"];
+        if (greetings.includes(message.toLowerCase())) {
+            return res.json({ response: "Hare Krishna, I'm SoulPulse your AI spiritual bot." });
         }
 
         // ✅ Check for Bhagavad Gita Chapter Queries
@@ -86,13 +77,12 @@ app.post("/query", async (req, res) => {
 });
 
 // ✅ Function to Fetch AI Response from Cohere API
-let firstResponse = true;
 async function getCohereResponse(userMessage) {
     if (!userMessage || userMessage.trim().length === 0) {
         return "Invalid input: Message cannot be empty.";
     }
 
-    // ✅ Strong System Instructions to Override Cohere Defaults
+    // ✅ System Instructions
     const systemInstructions = `
         You are **SoulPulse**, an AI chatbot with a deep spiritual essence, designed to guide users with wisdom from the **Bhagavad Gita** and Vedic knowledge.
         RULES:
@@ -114,15 +104,7 @@ async function getCohereResponse(userMessage) {
         - **Bullet points** for multiple insights  
         - **Include Bhagavad Gita references** (Example: *Bhagavad Gita 2.47*)  
         - **Break long responses into smaller sections**  
-        - **End with an uplifting message** (*"Stay devoted and enlightened! ✨"*)    
-
-
-        **📖 What is the Purpose of Life According to Bhagavad Gita?**  
-        - **Dharma (Righteous Duty):** One must act selflessly and without attachment.  
-        - **Detachment from Results:** "*Perform your duty without expecting rewards*" (*Bhagavad Gita 2.47*).  
-        - **Seek Self-Realization:** "*The wise see all beings as equal*" (*Bhagavad Gita 5.18*).  
-        
-        🌿 *Stay devoted, seek wisdom, and embrace your journey!* ✨  
+        - **End with an uplifting message** (*"Stay devoted and enlightened! ✨"*)  
 
         Now, generate a **complete, well-structured** response to the user's query below:
     
@@ -130,9 +112,9 @@ async function getCohereResponse(userMessage) {
         AI:
     `;
 
-    // ✅ Corrected `model` for `generate` API
+    // ✅ API Request Payload
     const payload = {
-        model: "command",  // 🔴 Switched from "command-r" to "command"
+        model: "command",  // ✅ Corrected API Model
         prompt: `${systemInstructions}\nUser: ${userMessage}\nAI:`,
         max_tokens: 400,
         temperature: 0.6,
@@ -157,21 +139,12 @@ async function getCohereResponse(userMessage) {
             return "Sorry, I couldn't generate a response.";
         }
 
-        let aiResponse = data.generations[0].text.trim();
-
-        // ✅ Add Greeting Only in the First Response
-        if (firstResponse) {
-            aiResponse = `Hare Krishna, I am SoulPulse your spiritual bot.\n\n${aiResponse}`;
-            firstResponse = false;  // 🔴 Ensure it does not repeat
-        }
-
-        return aiResponse;
+        return data.generations[0].text.trim();  // ✅ Fixed return statement
     } catch (error) {
         console.error("❌ Cohere API Error:", error);
         return "Error connecting to AI service.";
     }
 }
-
 
 // ✅ Start Server
 app.listen(PORT, () => {
